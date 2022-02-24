@@ -5,50 +5,44 @@ class Ampelsteuerung extends Component {
     constructor(props) {
         super(props);
         this.state = { 
-            Ampeln:["A", "A", "A", "A", "A", "A"],
-            active:0,
-            size:45
+            Ampeln:["A", "A", "A", "A", "A"],
+            active:0
          }
     }
-    loop(context){
-        let content = [];
-        let nextIndex;
-        // let nextContent = [];
-        context.state.Ampeln.forEach((Ampel, index) => {
-            if(Ampel === "A"){
-                content.push(<TFGAmpel key = {index} active = {context.state.active === index}/>)
-                // nextContent.push(<TFGAmpel key = {index} active = {context.state.active === index}/>)
-                // context.setState({active:nextIndex, content:nextContent})
-                for(let i = index + 1; i < context.state.Ampeln.length; i++){
-                    if(context.state.Ampeln[i] === "A" && context.state.active === index){
-                        nextIndex = i;
-                        break;
-                    }
 
-                }
-                if(context.state.active === context.state.Ampeln.length - 1){
-                    nextIndex = 0
-                    console.log(context.state.active)
-                }
+    next(callerId){
+        if (callerId !== this.state.active){
+            return;
+        }
+        console.log("called")
+        let nextIndex;
+        let length = this.state.Ampeln.length
+        for(let i = this.state.active; i < length; i++){
+            if(this.state.Ampeln[i] === "A" && this.state.active !== i){
+                nextIndex = i;
+                break;
             }
-        })
-        context.setState({active:nextIndex, content:content})
-        setTimeout(context.loop, 3500, context)
-    }
-    componentDidMount(){
-        this.loop(this);
+            
+        }
+        if(nextIndex === undefined){
+            nextIndex = 0;
+        }
         
+        this.setState({active:nextIndex})
     }
-    // componentDidUpdate(){
-    //     if(this.state.active === this.state.Ampeln.length){
-    //         this.setState({active:0})
-    //         setTimeout(this.loop, 3500, this)
-    //     }
-    // }
-    render() { 
+    componentDidUpdate(){
+        if(this.state.active > this.state.Ampeln.length - 1){
+            this.setState({active:0})
+        }
+    }
+    render() {
+        console.log("render")
+        console.log(this.state.active) 
         return ( 
             <div>
-            {this.state.content}
+            {this.state.Ampeln.map((Ampel, index)=>{
+                return <TFGAmpel key = {index} id = {index} active = {this.state.active === index} next = {this.next.bind(this)}/>
+            })}
                 <button onClick = {() => {
                     let newAmpeln = this.state.Ampeln.slice();
                     newAmpeln.push("A");

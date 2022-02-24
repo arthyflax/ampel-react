@@ -14,35 +14,34 @@ class TFGAmpel extends Component {
                 }
         }
     }
-    switchState (context , stateid) {
+    switchState (stateid) {
         switch(stateid){
             case 0:
-                context.setState({currentState: 1});
-                setTimeout(context.switchState, 1000, context, 1);
+                this.setState({currentState: 1});
+                setTimeout(this.switchState.bind(this), 1000, 1);
                 break;
             case 1:
-                context.setState({currentState: 2});
-                setTimeout(context.switchState, 1000, context, 2,);
+                this.setState({currentState: 2});
+                setTimeout(this.switchState.bind(this), 1000, 2);
                 break;
             case 2:
-                context.setState({currentState: 3});
-                setTimeout(context.switchState, 1000, context, 3);
+                this.setState({currentState: 3});
+                setTimeout(this.switchState.bind(this), 1000, 3);
                 break;
             case 3:
-                context.setState({currentState: 0});
+                this.props.next(this.props.id);
+                this.setState({currentState: 0});
                 break;
-            default:
-                console.log("HELP!")
         }
     }
     componentDidMount(){
         if(this.props.active){
-            setTimeout(this.switchState, 1000, this, 0);
+            setTimeout(this.switchState.bind(this), 1000, 0);
         }
     }
     componentDidUpdate(){
         if(this.props.active && this.state.currentState === 0){
-            setTimeout(this.switchState, 1000, this, 0);
+            setTimeout(this.switchState.bind(this), 1000, 0);
         }
     }
     render() { 
