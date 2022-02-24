@@ -5,9 +5,10 @@ class Ampelsteuerung extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            Ampeln: ["Auto", "Fußgänger", "Auto", "Auto", "Fußgänger", "Auto", "Auto", "Fußgänger"],
+            Ampeln: ["Auto", "Fußgänger", "Auto", "Fußgänger", "Auto", "Auto", "Fußgänger", "Auto", "Auto", "Auto"],
             active: -1,
-            pedestrian: false
+            pedestrian: false,
+            timeMultiplier: 1.0
         };
     }
 
@@ -26,10 +27,13 @@ class Ampelsteuerung extends Component {
         if (nextIndex === undefined) {
             this.setState({ pedestrian: true });
             for (let i = 0; i < this.state.Ampeln.length; i++) {
-                if (this.state.Ampeln[i] === "Fußgänger" && this.state.active !== i) {
+                if (this.state.Ampeln[i] === "Fußgänger") {
                     nextIndex = i;
                     break;
                 }
+            }
+            if (nextIndex === undefined) {
+                nextIndex = 0;
             }
         }
 
@@ -37,6 +41,34 @@ class Ampelsteuerung extends Component {
     }
 
     componentDidMount() {
+        document.addEventListener("keyup", (event) => {
+            let newAmpeln;
+            switch (event.key) {
+                case "a":
+                    newAmpeln = this.state.Ampeln.slice();
+                    newAmpeln.push("Auto");
+                    this.setState({ Ampeln: newAmpeln });
+                    break;
+                case "f":
+                    newAmpeln = this.state.Ampeln.slice();
+                    newAmpeln.push("Fußgänger");
+                    this.setState({ Ampeln: newAmpeln });
+                    break;
+                case "r":
+                    newAmpeln = this.state.Ampeln.slice();
+                    newAmpeln.pop();
+                    this.setState({ Ampeln: newAmpeln });
+                    break;
+                case "ArrowRight":
+                    this.setState({ timeMultiplier: this.state.timeMultiplier - 0.125 });
+                    break;
+                case "ArrowLeft":
+                    this.setState({ timeMultiplier: this.state.timeMultiplier + 0.125 });
+                    break;
+                default:
+                    break;
+            }
+        });
         this.next(-1);
     }
 
@@ -53,7 +85,7 @@ class Ampelsteuerung extends Component {
 
     render() {
         return (
-            <div>
+            <>
                 {this.state.Ampeln.map((Ampel, index) => {
                     return (
                         <TFGAmpel
@@ -62,28 +94,11 @@ class Ampelsteuerung extends Component {
                             type={Ampel}
                             active={this.state.active === index || (Ampel === "Fußgänger" && this.state.pedestrian)}
                             next={this.next.bind(this)}
+                            timeMultiplier={this.state.timeMultiplier}
                         />
                     );
                 })}
-                <button
-                    onClick={() => {
-                        let newAmpeln = this.state.Ampeln.slice();
-                        newAmpeln.push("Auto");
-                        this.setState({ Ampeln: newAmpeln });
-                    }}
-                    className="button">
-                    add
-                </button>
-                <button
-                    onClick={() => {
-                        let newAmpeln = this.state.Ampeln.slice();
-                        newAmpeln.pop();
-                        this.setState({ Ampeln: newAmpeln });
-                    }}
-                    className="button">
-                    unadd
-                </button>
-            </div>
+            </>
         );
     }
 }
