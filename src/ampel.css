@@ -1,0 +1,40 @@
+:root {
+    --size: 100px;
+}
+
+.grey{
+    background-color: grey !important; 
+}
+.red{
+    background-color: red;
+}
+.orange{
+    background-color: orange;
+}
+.green{
+    background-color: green;
+}
+.light{
+    border-radius: 50%;
+    height: 30%;
+    width: 60%;
+    display: hidden;
+}
+
+.ampel-wrapper{
+    height: calc(2 * var(--size));
+    width: var(--size);
+    padding-top: 0.1756%;
+    padding-bottom: 0.1756%;
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    background-color: black;
+}
+.button{
+    height: 30px;
+    width: 50px;
+    background-color: greenyellow;
+    text-align: center;
+}
