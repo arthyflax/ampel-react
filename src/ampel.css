@@ -1,42 +1,35 @@
 :root {
-  --size: 100px;
+    --size: 100px;
 }
 
 div.grey {
-    
-    
-  background-color: grey;
+    background-color: grey;
 }
 .red {
-  background-color: red;
+    background-color: red;
 }
 .orange {
-  background-color: orange;
+    background-color: orange;
 }
 .green {
-  background-color: green;
+    background-color: green;
 }
 .light {
-  border-radius: 50%;
-  height: 30%;
-  width: 60%;
-  display: hidden;
+    border-radius: 50%;
+    height: 30%;
+    width: 60%;
 }
 
 .ampel-wrapper {
-  height: calc(2 * var(--size));
-  width: var(--size);
-  padding-top: 0.1756%;
-  padding-bottom: 0.1756%;
-  display: inline-flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
-  background-color: black;
-}
-.button {
-  height: 30px;
-  width: 50px;
-  background-color: greenyellow;
-  text-align: center;
+    height: calc(2 * var(--size));
+    width: var(--size);
+    margin-bottom: 20px;
+    margin-right: 20px;
+    padding-top: 0.1756%;
+    padding-bottom: 0.1756%;
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    background-color: black;
 }

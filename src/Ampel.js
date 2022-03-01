@@ -1,10 +1,9 @@
 import { Component } from "react";
 import "./ampel.css";
 
-class TFGAmpel extends Component {
+class Ampel extends Component {
     constructor(props) {
         super(props);
-        this.timeout = [];
         this.state = {
             currentState: 0,
             stateList: [
@@ -20,18 +19,19 @@ class TFGAmpel extends Component {
     }
 
     switchState(stateid) {
+        let timeout;
         switch (stateid) {
             case 0:
                 this.setState({ currentState: 1 });
-                this.timeout = setTimeout(this.switchState.bind(this), 1000 * this.props.timeMultiplier, 1);
+                this.setState({ timeout: setTimeout(this.switchState.bind(this), 1000 * this.props.timeMultiplier, 1) });
                 break;
             case 1:
                 this.setState({ currentState: 2 });
-                setTimeout(this.switchState.bind(this), 2000 * this.props.timeMultiplier, 2);
+                this.setState({ timeout: setTimeout(this.switchState.bind(this), 2000 * this.props.timeMultiplier, 2) });
                 break;
             case 2:
                 this.setState({ currentState: 3 });
-                setTimeout(this.switchState.bind(this), 1000 * this.props.timeMultiplier, 3);
+                this.setState({ timeout: setTimeout(this.switchState.bind(this), 1000 * this.props.timeMultiplier, 3) });
                 break;
             case 3:
                 this.props.next(this.props.id);
@@ -42,14 +42,20 @@ class TFGAmpel extends Component {
 
     componentDidMount() {
         if (this.props.active) {
-            setTimeout(this.switchState.bind(this), 1000 * this.props.timeMultiplier, 0);
+            this.timeout = setTimeout(this.switchState.bind(this), 1000 * this.props.timeMultiplier, 0);
         }
     }
 
     componentDidUpdate() {
+        clearTimeout(this.timeout)
         if (this.props.active && this.state.currentState === 0) {
-            setTimeout(this.switchState.bind(this), 1000 * this.props.timeMultiplier, 0);
+            this.timeout = setTimeout(this.switchState.bind(this), 1000 * this.props.timeMultiplier, 0);
         }
+    }
+
+    componentWillUnmount() {
+        clearTimeout(this.state.timeout);
+        clearTimeout(this.timeout)
     }
 
     render() {
@@ -73,4 +79,4 @@ class TFGAmpel extends Component {
     }
 }
 
-export default TFGAmpel;
+export default Ampel;

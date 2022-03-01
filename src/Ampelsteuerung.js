@@ -1,5 +1,5 @@
 import { Component } from "react";
-import TFGAmpel from "./TFGAmpel";
+import Ampel from "./Ampel";
 
 class Ampelsteuerung extends Component {
     constructor(props) {
@@ -18,8 +18,9 @@ class Ampelsteuerung extends Component {
         }
         let nextIndex;
         if (this.state.pedestrian) this.setState({ pedestrian: false, active: -1 });
-        for (let i = this.state.active; i < this.state.Ampeln.length; i++) {
-            if (this.state.Ampeln[i] === "Auto" && this.state.active !== i) {
+        for (let i = this.state.active + 1; i < this.state.Ampeln.length; i++) {
+            if (this.state.Ampeln.length <= i) break;
+            if (this.state.Ampeln[i] === "Auto") {
                 nextIndex = i;
                 break;
             }
@@ -32,11 +33,11 @@ class Ampelsteuerung extends Component {
                     break;
                 }
             }
-            if (nextIndex === undefined) {
-                nextIndex = 0;
-            }
         }
 
+        if (nextIndex === undefined) {
+            nextIndex = 0;
+        }
         this.setState({ active: nextIndex });
     }
 
@@ -59,11 +60,19 @@ class Ampelsteuerung extends Component {
                     newAmpeln.pop();
                     this.setState({ Ampeln: newAmpeln });
                     break;
-                case "ArrowRight":
-                    this.setState({ timeMultiplier: this.state.timeMultiplier - 0.125 });
+                case "ArrowUp":
+                    if (this.state.timeMultiplier <= 1) {
+                        this.setState({ timeMultiplier: (3 / 4) * this.state.timeMultiplier });
+                    } else {
+                        this.setState({ timeMultiplier: this.state.timeMultiplier - 0.25 });
+                    }
                     break;
-                case "ArrowLeft":
-                    this.setState({ timeMultiplier: this.state.timeMultiplier + 0.125 });
+                case "ArrowDown":
+                    if (this.state.timeMultiplier < 1) {
+                        this.setState({ timeMultiplier: (4 / 3) * this.state.timeMultiplier });
+                    } else {
+                        this.setState({ timeMultiplier: this.state.timeMultiplier + 0.25 });
+                    }
                     break;
                 default:
                     break;
@@ -86,13 +95,13 @@ class Ampelsteuerung extends Component {
     render() {
         return (
             <>
-                {this.state.Ampeln.map((Ampel, index) => {
+                {this.state.Ampeln.map((AmpelArt, index) => {
                     return (
-                        <TFGAmpel
+                        <Ampel
                             key={index}
                             id={index}
-                            type={Ampel}
-                            active={this.state.active === index || (Ampel === "Fußgänger" && this.state.pedestrian)}
+                            type={AmpelArt}
+                            active={this.state.active === index || (AmpelArt === "Fußgänger" && this.state.pedestrian)}
                             next={this.next.bind(this)}
                             timeMultiplier={this.state.timeMultiplier}
                         />
