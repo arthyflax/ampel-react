@@ -44,6 +44,9 @@ class Ampelsteuerung extends Component {
     componentDidMount() {
         document.addEventListener("keyup", (event) => {
             let newAmpeln;
+            if (!isNaN(event.key)) {
+                this.fibonacci(parseInt(event.key));
+            }
             switch (event.key) {
                 case "a":
                     newAmpeln = this.state.Ampeln.slice();
@@ -73,6 +76,12 @@ class Ampelsteuerung extends Component {
                     } else {
                         this.setState({ timeMultiplier: this.state.timeMultiplier + 0.25 });
                     }
+                    break;
+                case "e":
+                    this.fibonacci(this.state.Ampeln.length);
+                    break;
+                case "s":
+                    this.setState({ timeMultiplier: 1.0 });
                     break;
                 default:
                     break;
@@ -109,6 +118,25 @@ class Ampelsteuerung extends Component {
                 })}
             </>
         );
+    }
+
+    fibonacci(n) {
+        if (n > 9) n = 9;
+        let fib1 = 0;
+        let fib2 = 1;
+        let swap,
+            newAmpeln = ["Auto", "Fußgänger"];
+        for (let i = 0; i < n - 1; i++) {
+            swap = fib1 + fib2;
+            fib1 = fib2;
+            fib2 = swap;
+            for (let j = 0; j < swap; j++) {
+                newAmpeln.push("Auto");
+            }
+            newAmpeln.push("Fußgänger");
+        }
+        if (n === 0) newAmpeln = [];
+        this.setState({ Ampeln: newAmpeln });
     }
 }
 
